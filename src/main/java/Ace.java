@@ -1,25 +1,69 @@
 import java.util.Scanner;
+
+import lib.Event;
 import lib.Task;
+import lib.TaskType;
+import lib.Deadline;
+import lib.ToDo;
+
 
 public class Ace {
 
+    // Divider function
     public static void setDivider() {
-        System.out.println("__________________"
+        System.out.println("\n__________________"
                 + "____________________"
                 + "____________________"
                 + "____________________"
                 + "____________________"
                 + "____________________"
-                + "____________________");
-    }
-
-    public static void setGap() {
-        System.out.println("");
+                + "____________________\n");
     }
 
     // Echo function
     public static void echo(String input) {
         System.out.print(input + "\n");
+    }
+
+    // Create task function
+    public static Task createTask(String input) {
+        TaskType taskType;
+
+        if (input.contains("/by")) {
+            taskType = TaskType.DEADLINE;
+        } else if (input.contains("/from") && input.contains("/to")) {
+            taskType = TaskType.EVENT;
+        } else {
+            taskType = TaskType.TODO;
+        }
+
+        switch (taskType) {
+            case DEADLINE:
+                String[] deadlineParts = input.split("/by", 2);
+                String deadlineDescription = deadlineParts[0].trim();
+                String dueDate = deadlineParts[1].trim();
+                return new Deadline(deadlineDescription, dueDate);
+            case EVENT:
+                String[] eventParts = input.split("/from", 2);
+                String eventDescription = eventParts[0].trim();
+                String[] eventDates = eventParts[1].split("/to", 2);
+                String startDate = eventDates[0].trim();
+                String endDate = eventDates[1].trim();
+                return new Event(eventDescription, startDate, endDate);
+            case TODO:
+                String todoDescription = input.trim();
+                return new ToDo(todoDescription);
+            default: 
+                throw new IllegalArgumentException("Invalid input for task creation: " + input);
+        }
+    }
+
+    // Function to display "task" or "tasks"
+    public static String numberOfTasks(int i) {
+        if (i == 1) {
+            return " task"; 
+        }
+        return " tasks";
     }
 
     // Add-to-list function
@@ -28,22 +72,20 @@ public class Ace {
             if (taskArray[i] == null) {
                 taskArray[i] = t;
                 System.out.println("Added: " + t.getDescription());
+                System.out.println("You have " + (i + 1) + numberOfTasks(i + 1) + " in your list.");
                 return;
             }
         }
-        // If no empty slot is found
-        System.out.println("Error: Task list is full. Could not add: " + t.getDescription());
+        System.out.println("Error: Task list is full. Could not add: " + t.getDescription());   // If no empty slot is found
     }
 
     // Show list function
     public static void showList(Task[] taskArray) {
-        setGap();
         for (int i = 0; i < taskArray.length; i++) {
             if (taskArray[i] == null) {
                 return;
             }
-            String statusIcon = taskArray[i].getStatusIcon();
-            System.out.println((i + 1) + ".[" + statusIcon + "] " + taskArray[i].getDescription());
+            System.out.println((i + 1) + "." + taskArray[i].toString());
         }
     }
 
@@ -89,7 +131,6 @@ public class Ace {
     public static boolean isTaskIDValid(int taskId) {
         if (taskId < 1 || taskId > 100) {
             System.out.println("Invalid task id: " + taskId + ". Task ID must be between 1 and 100.");
-            setGap();
             setDivider();
             return false;
         }
@@ -107,33 +148,24 @@ public class Ace {
                 + "|_| |_| |_____| |_____|\n";
 
         setDivider();
-        setGap();
         System.out.println("Hello! I am...\n" + logo);
         System.out.println("How can I assist you?");
-        setGap();
         setDivider();
-
-        // Initialize array for task list
-        Task[] tasks = new Task[100];
+        
+        Task[] tasks = new Task[100];   // Initialize array for task list
 
         while (true) {
-            setGap();
             System.out.print("> ");
             String input = scanner.nextLine();
-            setGap();
-
             if (input.equalsIgnoreCase("bye")) {
                 System.out.println("Have a good day.");
-                setGap();
                 setDivider();
                 break;
             } else if (input.equalsIgnoreCase("list")) {
                 showList(tasks);
-                setGap();
                 setDivider();
             } else if (isMarkCommand(input)) {
-                int taskId = Integer.parseInt(input.substring(5)); // extract task ID
-
+                int taskId = Integer.parseInt(input.substring(5));  // extract task ID
                 if (tasks[taskId - 1] != null) {
                     if ((tasks[taskId - 1]).getDoneStatus() == true) {
                         System.out.println("Task " + taskId + " is already marked.");
@@ -144,11 +176,9 @@ public class Ace {
                 } else {
                     System.out.println("Task " + taskId + " does not exist.");
                 }
-                setGap();
                 setDivider();
             } else if (isUnMarkCommand(input)) {
-                int taskId = Integer.parseInt(input.substring(7)); // extract task ID
-
+                int taskId = Integer.parseInt(input.substring(7));  // extract task ID
                 if (tasks[taskId - 1] != null) {
                     if ((tasks[taskId - 1]).getDoneStatus() == false) {
                         System.out.println("Task " + taskId + " is already unmarked.");
@@ -159,24 +189,16 @@ public class Ace {
                 } else {
                     System.out.println("Task " + taskId + " does not exist.");
                 }
-                setGap();
                 setDivider();
             } else if (!input.toLowerCase().startsWith("mark") && !input.toLowerCase().startsWith("unmark")) {
-                if (input.trim().isEmpty()) {
-                    // Handle empty input
+                if (input.trim().isEmpty()) {   // Handle empty input
                     System.out.println("Please enter a command.");
-                } else {
-                    setGap();
-                    Task t = new Task(input);
+                    setDivider();
+                } else {    // Create task
+                    Task t = createTask(input);
                     addToList(tasks, t);
-                    setGap();
                     setDivider();
                 }
-            } else {
-                setGap();
-                System.out.println("Invalid command.");
-                setGap();
-                setDivider();
             }
         }
         scanner.close();
