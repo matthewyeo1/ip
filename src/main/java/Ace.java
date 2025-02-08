@@ -1,47 +1,44 @@
 import java.util.Scanner;
 import lib.TaskManager;
+import commands.Commands;
+import menu.Menu;
 
 public class Ace {
+
+    public Ace () {};
     public static void main(String[] args) {
+        new Ace().run();
+    }
+
+    public void run() {
         Scanner scanner = new Scanner(System.in);
         TaskManager taskManager = new TaskManager();
+        Menu menu = new Menu();
         
-        displayWelcomeMessage();
+        menu.displayWelcomeMessage();
         
         while (true) {
-            System.out.print("> ");
+            System.out.print(Commands.INPUT_INDICATOR);
             String input = scanner.nextLine().trim();
             
-            if (input.equalsIgnoreCase("bye")) {
-                System.out.println("Have a good day.");
-                setDivider();
+            if (input.equalsIgnoreCase(Commands.BYE)) {
+                taskManager.handleExit();
+                menu.setDivider();
                 break;
-            } else if (input.equalsIgnoreCase("list")) {
+            } else if (input.equalsIgnoreCase(Commands.LIST)) {
                 taskManager.showList();
-                setDivider();
-            } else {
+                menu.setDivider();
+            } else if (input.contains(Commands.DELETE)) {
+                taskManager.handleDelete(input);
+                menu.setDivider();
+            } else if (input.contains(Commands.MARK) || input.contains(Commands.UNMARK)){
                 taskManager.handleMarkUnmark(input);
-                setDivider();
+                menu.setDivider();
+            } else {
+                taskManager.addTask(input);
+                menu.setDivider();
             }
         }
         scanner.close();
-    }
-
-    public static void setDivider() {
-        System.out.println("\n" + "_".repeat(80) + "\n");
-    }
-
-    private static void displayWelcomeMessage() {
-        String logo = " _____   _____   _____\n"
-                    + "|  _  | |  __ | |  ___|\n"
-                    + "| |_| | | |     | |___ \n"
-                    + "|  _  | | |     |  ___|\n"
-                    + "| | | | | |___  | |___\n"
-                    + "|_| |_| |_____| |_____|\n";
-        
-        setDivider();
-        System.out.println("Hello! I am...\n" + logo);
-        System.out.println("How can I assist you?");
-        setDivider();
     }
 }
