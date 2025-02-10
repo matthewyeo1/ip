@@ -1,0 +1,26 @@
+Buy groceries
+list
+Dinner with mom /from 6pm /to 8pm
+list
+Finish CS2113 assignment /by Friday 2359hrs
+list
+mark 0
+mark 4
+mark 101
+mark XYZ
+mark 1
+list
+mark 1
+unmark 1
+list
+unmark 1
+delete 1
+list
+delete 3
+delete 0
+delete ABC
+delete 1
+list
+delete 1
+list
+bye

@@ -17,15 +17,17 @@ public class Ace {
         
         menu.displayWelcomeMessage();
         
-        while (true) {
-            System.out.print(Commands.INPUT_INDICATOR);
-            String input = scanner.nextLine().trim();
+        while (scanner.hasNextLine()) {
             
+            String input = scanner.nextLine().trim();
+            System.out.print(Commands.INPUT_INDICATOR);
+
             if (input.equalsIgnoreCase(Commands.BYE)) {
                 taskManager.handleExit();
                 menu.setDivider();
                 break;
             } else if (input.equalsIgnoreCase(Commands.LIST)) {
+                System.out.println();
                 taskManager.showList();
                 menu.setDivider();
             } else if (input.contains(Commands.DELETE)) {
