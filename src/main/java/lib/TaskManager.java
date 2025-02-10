@@ -1,23 +1,31 @@
 package lib;
+
 import error_handling.InvalidTaskException;
 import error_handling.MissingTaskIndexException;
+import commands.Commands;
+import java.util.ArrayList;
+import messages.Messages;
 
 public class TaskManager {
     private static final int MAX_TASKS = 100;
-    private Task[] tasks;
-    private int taskCount;
+    private ArrayList<Task> tasks;
+
+    Messages messages = new Messages();
 
     public TaskManager() {
-        tasks = new Task[MAX_TASKS];
-        taskCount = 0;
+        tasks = new ArrayList<>();
+    }
+
+    public String setSpacing() {
+        return " ";
     }
 
     public void showList() {
-        if (taskCount == 0) {
-            System.out.println("Your task list is empty.");
+        if (tasks.isEmpty()) {
+            messages.emptyListMessage();
         } else {
-            for (int i = 0; i < taskCount; i++) {
-                System.out.println((i + 1) + ". " + tasks[i].toString());
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println((i + 1) + "." + setSpacing() + tasks.get(i).toString());
             }
         }
     }
@@ -26,39 +34,44 @@ public class TaskManager {
         TaskType taskType = determineTaskType(input);
         switch (taskType) {
             case DEADLINE:
-                String[] deadlineParts = input.split("/by", 2);
+                String[] deadlineParts = input.split(Commands.TASK_BY, 2);
                 return new Deadline(deadlineParts[0].trim(), deadlineParts[1].trim());
             case EVENT:
-                String[] eventParts = input.split("/from", 2);
-                String[] eventDates = eventParts[1].split("/to", 2);
+                String[] eventParts = input.split(Commands.TASK_FROM, 2);
+                String[] eventDates = eventParts[1].split(Commands.TASK_TO, 2);
                 return new Event(eventParts[0].trim(), eventDates[0].trim(), eventDates[1].trim());
             case TODO:
                 return new ToDo(input.trim());
             default:
-                throw new IllegalArgumentException("Invalid input for task creation: " + input);
+                throw new IllegalArgumentException(messages.invalidTaskTypeMessage() + input);
         }
     }
 
     private TaskType determineTaskType(String input) {
-        if (input.contains("/by")) return TaskType.DEADLINE;
-        if (input.contains("/from") && input.contains("/to")) return TaskType.EVENT;
+        if (input.contains(Commands.TASK_BY)) {
+            return TaskType.DEADLINE;
+        }
+        if (input.contains(Commands.TASK_FROM) && input.contains(Commands.TASK_TO)) {
+            return TaskType.EVENT;
+        }
         return TaskType.TODO;
     }
 
     public void addTask(String input) {
         if (input.isEmpty()) {
-            System.out.println("Please enter a command.");
+            messages.emptyInputMessage();
+            return;
+        }
+
+        if (tasks.size() >= MAX_TASKS) {
+            messages.fullTaskListMessage();
             return;
         }
 
         Task task = createTask(input);
-        if (taskCount < MAX_TASKS) {
-            tasks[taskCount++] = task;
-            System.out.println("Added: " + task.getDescription());
-            System.out.println("You have " + taskCount + numberOfTasks(taskCount) + " in your list.");
-        } else {
-            System.out.println("Error: Task list is full. Could not add: " + task.getDescription());
-        }
+        tasks.add(task);
+        messages.addedTaskSuccessfullyMessage(task.getDescription());
+        messages.numberOfTasksInListMessage(tasks.size(), numberOfTasks(tasks.size()));
     }
 
     private String numberOfTasks(int count) {
@@ -67,14 +80,24 @@ public class TaskManager {
 
     public void handleMarkUnmark(String input) {
         try {
-            if (input.toLowerCase().equals("mark") || input.toLowerCase().equals("unmark")) {
-                throw new MissingTaskIndexException("Task index is missing."); 
-            } else if (input.toLowerCase().startsWith("unmark ")) {
+            if (input.toLowerCase().equals(Commands.MARK) || input.toLowerCase().equals(Commands.UNMARK)) {
+                throw new MissingTaskIndexException(messages.missingTaskIndexMessage()); 
+            } else if (input.toLowerCase().startsWith(Commands.UNMARK + setSpacing())) {
                 unmarkTask(input);  
-            } else if (input.toLowerCase().startsWith("mark ")) {
+            } else if (input.toLowerCase().startsWith(Commands.MARK + setSpacing())) {
                 markTask(input); 
-            } else {
-                addTask(input);
+            }
+        } catch (MissingTaskIndexException | InvalidTaskException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void handleDelete(String input) {
+        try {
+            if (input.toLowerCase().equals(Commands.DELETE)) {
+                throw new MissingTaskIndexException(messages.missingTaskIndexMessage()); 
+            } else if (input.toLowerCase().startsWith(Commands.DELETE + setSpacing())) {
+                deleteTask(input);  
             }
         } catch (MissingTaskIndexException | InvalidTaskException e) {
             System.out.println(e.getMessage());
@@ -82,34 +105,34 @@ public class TaskManager {
     }
 
     public void markTask(String input) throws MissingTaskIndexException, InvalidTaskException {
-        int taskId = extractTaskId(input, "mark ");
+        int taskId = extractTaskId(input, Commands.MARK + setSpacing());
         validateTaskId(taskId);
-
-        if (taskId > taskCount || taskId < 1) { 
-            throw new InvalidTaskException("Task " + taskId + " does not exist.");
+        
+        if (taskId > tasks.size() || taskId < 1) { 
+            throw new InvalidTaskException(messages.nonexistentTaskIndex(taskId));
         }
 
-        if (tasks[taskId - 1].getDoneStatus()) {
-            System.out.println("Task " + taskId + " is already marked.");
+        if (tasks.get(taskId - 1).getDoneStatus()) {
+            messages.taskAlreadyMarkedMessage(taskId);
         } else {
-            tasks[taskId - 1].setDone(true);
-            System.out.println("Marked task " + taskId + " as done.");
+            tasks.get(taskId - 1).setDone(true);
+            messages.markedTaskSuccessfullyMessage(taskId);
         }
     }
 
     public void unmarkTask(String input) throws MissingTaskIndexException, InvalidTaskException {
-        int taskId = extractTaskId(input, "unmark ");
+        int taskId = extractTaskId(input, Commands.UNMARK + setSpacing());
         validateTaskId(taskId);
-
-        if (taskId > taskCount || taskId < 1) { 
-            throw new InvalidTaskException("Task ID " + taskId + " does not exist.");
+        
+        if (taskId > tasks.size() || taskId < 1) { 
+            throw new InvalidTaskException(messages.nonexistentTaskIndex(taskId));
         }
 
-        if (!tasks[taskId - 1].getDoneStatus()) {
-            System.out.println("Task " + taskId + " is already unmarked.");
+        if (!tasks.get(taskId - 1).getDoneStatus()) {
+            messages.taskAlreadyUnmarkedMessage(taskId);
         } else {
-            tasks[taskId - 1].setDone(false);
-            System.out.println("Unmarked task " + taskId + ".");
+            tasks.get(taskId - 1).setDone(false);
+            messages.unmarkedTaskSuccessfullyMessage(taskId);
         }
     }
 
@@ -120,14 +143,36 @@ public class TaskManager {
             int taskId = Integer.parseInt(taskIdStr);
             return taskId;
         } catch (NumberFormatException e) {
-            throw new InvalidTaskException("Invalid task index. Please enter a number.");
+            if (taskIdStr.length() > 10 || taskIdStr.length() < 1) {
+                throw new IndexOutOfBoundsException(messages.indexOutOfBoundsMessage());
+            }
+            throw new InvalidTaskException(messages.invalidTaskIdMessage());
         }
     }
 
     private void validateTaskId(int taskId) throws InvalidTaskException {
         if (taskId < 1 || taskId > MAX_TASKS) {
-            throw new InvalidTaskException("Task ID must be between 1 and " + MAX_TASKS + ".");
+            throw new InvalidTaskException(messages.taskIdOutOfBoundsMessage());
         }
+    }
+
+    public void deleteTask(String input) throws MissingTaskIndexException, InvalidTaskException {
+        if (input.toLowerCase().equals(Commands.DELETE)) {
+            throw new MissingTaskIndexException(messages.missingTaskIndexMessage());
+        }
+
+        int taskId = extractTaskId(input, Commands.DELETE + setSpacing());
+        validateTaskId(taskId);
+        
+        if (taskId > tasks.size() || taskId < 1) { 
+            throw new InvalidTaskException(messages.nonexistentTaskIndex(taskId));
+        }
+        tasks.remove(taskId - 1);
+        messages.deleteTaskSuccessfullyMessage(taskId);
+    }
+
+    public void handleExit() {
+        messages.exitMessage();
     }
 }
 
