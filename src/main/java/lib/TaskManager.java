@@ -1,23 +1,33 @@
 package lib;
 import error_handling.InvalidTaskException;
 import error_handling.MissingTaskIndexException;
+import data_storage.TaskFileHandler;
+import java.util.ArrayList;
 
 public class TaskManager {
     private static final int MAX_TASKS = 100;
-    private Task[] tasks;
-    private int taskCount;
+    private ArrayList<Task> tasks;
+    private TaskFileHandler fileHandler;
 
     public TaskManager() {
-        tasks = new Task[MAX_TASKS];
-        taskCount = 0;
+        this.fileHandler = new TaskFileHandler();
+        this.tasks = fileHandler.loadTasks();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                fileHandler.saveTasks(tasks);
+            }
+        }));
+
     }
 
     public void showList() {
-        if (taskCount == 0) {
+        if (tasks.isEmpty()) {
             System.out.println("Your task list is empty.");
         } else {
-            for (int i = 0; i < taskCount; i++) {
-                System.out.println((i + 1) + ". " + tasks[i].toString());
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println((i + 1) + ". " + tasks.get(i).toString());
             }
         }
     }
@@ -52,10 +62,11 @@ public class TaskManager {
         }
 
         Task task = createTask(input);
-        if (taskCount < MAX_TASKS) {
-            tasks[taskCount++] = task;
+        if (tasks.size() < MAX_TASKS) {
+            tasks.add(task);
+            fileHandler.saveTasks(tasks);
             System.out.println("Added: " + task.getDescription());
-            System.out.println("You have " + taskCount + numberOfTasks(taskCount) + " in your list.");
+            System.out.println("You have " + tasks.size() + numberOfTasks(tasks.size()) + " in your list.");
         } else {
             System.out.println("Error: Task list is full. Could not add: " + task.getDescription());
         }
@@ -76,6 +87,7 @@ public class TaskManager {
             } else {
                 addTask(input);
             }
+            fileHandler.saveTasks(tasks);
         } catch (MissingTaskIndexException | InvalidTaskException e) {
             System.out.println(e.getMessage());
         }
@@ -85,14 +97,15 @@ public class TaskManager {
         int taskId = extractTaskId(input, "mark ");
         validateTaskId(taskId);
 
-        if (taskId > taskCount || taskId < 1) { 
+        if (taskId > tasks.size() || taskId < 1) { 
             throw new InvalidTaskException("Task " + taskId + " does not exist.");
         }
 
-        if (tasks[taskId - 1].getDoneStatus()) {
+        if (tasks.get(taskId - 1).getDoneStatus()) {
             System.out.println("Task " + taskId + " is already marked.");
         } else {
-            tasks[taskId - 1].setDone(true);
+            tasks.get(taskId - 1).setDone(true);
+            fileHandler.saveTasks(tasks);
             System.out.println("Marked task " + taskId + " as done.");
         }
     }
@@ -101,14 +114,15 @@ public class TaskManager {
         int taskId = extractTaskId(input, "unmark ");
         validateTaskId(taskId);
 
-        if (taskId > taskCount || taskId < 1) { 
+        if (taskId > tasks.size() || taskId < 1) { 
             throw new InvalidTaskException("Task ID " + taskId + " does not exist.");
         }
 
-        if (!tasks[taskId - 1].getDoneStatus()) {
+        if (!tasks.get(taskId - 1).getDoneStatus()) {
             System.out.println("Task " + taskId + " is already unmarked.");
         } else {
-            tasks[taskId - 1].setDone(false);
+            tasks.get(taskId - 1).setDone(false);
+            fileHandler.saveTasks(tasks);
             System.out.println("Unmarked task " + taskId + ".");
         }
     }
@@ -129,5 +143,5 @@ public class TaskManager {
             throw new InvalidTaskException("Task ID must be between 1 and " + MAX_TASKS + ".");
         }
     }
+    
 }
-
