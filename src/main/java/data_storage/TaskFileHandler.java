@@ -12,9 +12,18 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import lib.Task;
+import messages.Messages;
 
 public class TaskFileHandler {
     private static final String FILE_NAME = "./tasks.txt";
+    private static final String TODO_ICON = "T";
+    private static final String DEADLINE_ICON = "D";
+    private static final String EVENT_ICON = "E";
+    private static final String DELIMITER = " | ";
+    private static final String EMPTY_STRING = "";
+    private static final String ATTRIBUTE_SEPARATOR = " \\| ";
+
+    Messages messages = new Messages();
 
     public void saveTasks(ArrayList<Task> tasks) {
         File file = new File(FILE_NAME);
@@ -30,7 +39,7 @@ public class TaskFileHandler {
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Error saving tasks: " + e.getMessage());
+            System.out.println(messages.saveTaskErrorMessage() + e);
         }
     }
     
@@ -39,7 +48,7 @@ public class TaskFileHandler {
         File file = new File(FILE_NAME);
     
         if (!file.exists()) {
-            System.out.println("Task file not found, creating new one...");
+            Messages.missingTaskFileMessage();
             return taskList; 
         }
     
@@ -49,41 +58,54 @@ public class TaskFileHandler {
                 Task task = parseTask(line);
                 if (task != null) {
                     taskList.add(task);
-                    System.out.println("Loaded Task: " + task.getDescription()); 
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error loading tasks: " + e.getMessage());
-        }
-    
-        System.out.println("Total tasks loaded: " + taskList.size()); 
+            System.out.println(Messages.loadTaskErrorMessage() + e.getMessage());
+        } 
         return taskList;
     }
     
-    
     private static String taskToFileFormat(Task task) {
         if (task instanceof Deadline) {
-            return "D | " + task.getDoneStatus() + " | " + task.getDescription() + " | " + ((Deadline) task).getDueDate();
+            return DEADLINE_ICON + DELIMITER + task.getDoneStatus() + 
+            DELIMITER + task.getDescription() + DELIMITER + 
+            ((Deadline) task).getDueDate();
         } else if (task instanceof Event) {
-            return "E | " + task.getDoneStatus() + " | " + task.getDescription() + " | " + ((Event) task).getStartDate() + " | " + ((Event) task).getEndDate();
+            return EVENT_ICON + DELIMITER + task.getDoneStatus() + 
+            DELIMITER + task.getDescription() + DELIMITER + 
+            ((Event) task).getStartDate() + DELIMITER + ((Event) task).getEndDate();
         } else if (task instanceof ToDo) {
-            return "T | " + task.getDoneStatus() + " | " + task.getDescription();
+            return TODO_ICON + DELIMITER + task.getDoneStatus() + 
+            DELIMITER + task.getDescription();
         }
-        return "";
+        return EMPTY_STRING;
     }
 
     private static Task parseTask(String line) {
-        String[] parts = line.split(" \\| ");
+        String[] parts = line.split(ATTRIBUTE_SEPARATOR);
         if (parts.length < 2) return null;
 
         String type = parts[0];
         String description = parts[2];
 
         switch (type) {
-            case "T": return new ToDo(description);
-            case "D": return new Deadline(description, parts[3]);
-            case "E": return new Event(description, parts[3], parts[4]);
+            case TODO_ICON: return new ToDo(description);
+            case DEADLINE_ICON: return new Deadline(description, parts[3]);
+            case EVENT_ICON: return new Event(description, parts[3], parts[4]);
             default: return null;
+        }
+    }
+
+    public void updateTaskFile(ArrayList<Task> tasks) {
+        File file = new File(FILE_NAME);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (Task task : tasks) {
+                writer.write(taskToFileFormat(task));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println(Messages.updateTaskFileError() + e.getMessage());
         }
     }
 }

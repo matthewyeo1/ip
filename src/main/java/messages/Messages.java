@@ -6,6 +6,10 @@ public final class Messages {
         System.out.println("Your task list is empty.");
     }
 
+    public String taskIndex(int index) {
+        return index + 1 + ". ";
+    }
+
     public String invalidTaskTypeMessage() {
         return "ERROR: Invalid input for task creation.";
     }
@@ -22,8 +26,12 @@ public final class Messages {
         System.out.println("Added: " + taskDescription);
     }
 
-    public void numberOfTasksInListMessage(int listSize, String taskOrTasks) {
-        System.out.println("You have " + listSize + taskOrTasks + " in your list.");
+    public void numberOfTasksInListMessage(int listSize) {
+        if (listSize > 1) {
+            System.out.println("You have " + listSize + " tasks in your list.");
+        } else {
+            System.out.println("You have " + listSize + " task in your list.");
+        }
     }
 
     public String missingTaskIndexMessage() {
@@ -68,5 +76,21 @@ public final class Messages {
 
     public String indexOutOfBoundsMessage() {
         return "ERROR: That is an awfully large task ID";
+    }
+
+    public String saveTaskErrorMessage() {
+        return "Error saving tasks: ";
+    }
+
+    public static void missingTaskFileMessage() {
+        System.out.println("Task file not found, creating new one...");
+    }
+
+    public static String loadTaskErrorMessage() {
+        return "Error loading tasks: ";
+    }
+
+    public static String updateTaskFileError() {
+        return "Error updating tasks file: ";
     }
 }

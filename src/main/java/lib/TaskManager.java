@@ -5,15 +5,24 @@ import error_handling.MissingTaskIndexException;
 import commands.Commands;
 import java.util.ArrayList;
 import messages.Messages;
+import data_storage.TaskFileHandler;
 
 public class TaskManager {
     private static final int MAX_TASKS = 100;
     private ArrayList<Task> tasks;
-
+    private TaskFileHandler fileHandler;
     Messages messages = new Messages();
 
     public TaskManager() {
-        tasks = new ArrayList<>();
+        this.fileHandler = new TaskFileHandler();
+        this.tasks = TaskFileHandler.loadTasks();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                fileHandler.saveTasks(tasks);
+            }
+        }));
     }
 
     public String setSpacing() {
@@ -25,7 +34,7 @@ public class TaskManager {
             messages.emptyListMessage();
         } else {
             for (int i = 0; i < tasks.size(); i++) {
-                System.out.println((i + 1) + "." + setSpacing() + tasks.get(i).toString());
+                System.out.println(messages.taskIndex(i) + tasks.get(i).toString());
             }
         }
     }
@@ -70,12 +79,9 @@ public class TaskManager {
 
         Task task = createTask(input);
         tasks.add(task);
+        fileHandler.saveTasks(tasks);
         messages.addedTaskSuccessfullyMessage(task.getDescription());
-        messages.numberOfTasksInListMessage(tasks.size(), numberOfTasks(tasks.size()));
-    }
-
-    private String numberOfTasks(int count) {
-        return count == 1 ? " task" : " tasks";
+        messages.numberOfTasksInListMessage(tasks.size());
     }
 
     public void handleMarkUnmark(String input) {
@@ -87,6 +93,7 @@ public class TaskManager {
             } else if (input.toLowerCase().startsWith(Commands.MARK + setSpacing())) {
                 markTask(input); 
             }
+            fileHandler.saveTasks(tasks);
         } catch (MissingTaskIndexException | InvalidTaskException e) {
             System.out.println(e.getMessage());
         }
@@ -99,6 +106,7 @@ public class TaskManager {
             } else if (input.toLowerCase().startsWith(Commands.DELETE + setSpacing())) {
                 deleteTask(input);  
             }
+            fileHandler.saveTasks(tasks);
         } catch (MissingTaskIndexException | InvalidTaskException e) {
             System.out.println(e.getMessage());
         }
@@ -167,11 +175,14 @@ public class TaskManager {
         if (taskId > tasks.size() || taskId < 1) { 
             throw new InvalidTaskException(messages.nonexistentTaskIndex(taskId));
         }
+
         tasks.remove(taskId - 1);
         messages.deleteTaskSuccessfullyMessage(taskId);
+        fileHandler.updateTaskFile(tasks);
     }
 
     public void handleExit() {
         messages.exitMessage();
     }
 }
+
