@@ -22,6 +22,7 @@ public class TaskFileHandler {
     private static final String DELIMITER = " | ";
     private static final String EMPTY_STRING = "";
     private static final String ATTRIBUTE_SEPARATOR = " \\| ";
+    private static final String TASK_STATUS_FLAG = "true";
 
     Messages messages = new Messages();
 
@@ -84,18 +85,32 @@ public class TaskFileHandler {
 
     private static Task parseTask(String line) {
         String[] parts = line.split(ATTRIBUTE_SEPARATOR);
-        if (parts.length < 2) return null;
-
+        if (parts.length < 3) return null;
+    
         String type = parts[0];
+        boolean isDone = parts[1].equals(TASK_STATUS_FLAG); 
         String description = parts[2];
-
+    
+        Task task;
         switch (type) {
-            case TODO_ICON: return new ToDo(description);
-            case DEADLINE_ICON: return new Deadline(description, parts[3]);
-            case EVENT_ICON: return new Event(description, parts[3], parts[4]);
-            default: return null;
+            case TODO_ICON:
+                task = new ToDo(description);
+                break;
+            case DEADLINE_ICON:
+                if (parts.length < 4) return null;
+                task = new Deadline(description, parts[3]);
+                break;
+            case EVENT_ICON:
+                if (parts.length < 5) return null;
+                task = new Event(description, parts[3], parts[4]);
+                break;
+            default:
+                return null;
         }
+        task.setDone(isDone);
+        return task;
     }
+    
 
     public void updateTaskFile(ArrayList<Task> tasks) {
         File file = new File(FILE_NAME);

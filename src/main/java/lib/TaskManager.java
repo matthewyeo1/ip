@@ -16,13 +16,6 @@ public class TaskManager {
     public TaskManager() {
         this.fileHandler = new TaskFileHandler();
         this.tasks = TaskFileHandler.loadTasks();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                fileHandler.saveTasks(tasks);
-            }
-        }));
     }
 
     public String setSpacing() {
@@ -124,6 +117,8 @@ public class TaskManager {
             messages.taskAlreadyMarkedMessage(taskId);
         } else {
             tasks.get(taskId - 1).setDone(true);
+            fileHandler.saveTasks(tasks);
+            fileHandler.updateTaskFile(tasks);
             messages.markedTaskSuccessfullyMessage(taskId);
         }
     }
@@ -140,6 +135,8 @@ public class TaskManager {
             messages.taskAlreadyUnmarkedMessage(taskId);
         } else {
             tasks.get(taskId - 1).setDone(false);
+            fileHandler.saveTasks(tasks);
+            fileHandler.updateTaskFile(tasks);
             messages.unmarkedTaskSuccessfullyMessage(taskId);
         }
     }
