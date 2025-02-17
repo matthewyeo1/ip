@@ -2,6 +2,7 @@ package lib;
 
 import error_handling.InvalidTaskException;
 import error_handling.MissingTaskIndexException;
+import error_handling.MissingKeywordException;
 import commands.Commands;
 import java.util.ArrayList;
 import messages.Messages;
@@ -49,13 +50,52 @@ public class TaskManager {
         }
     }
 
+    public void findTask(String input) {
+        String keyword = extractKeyword(input, Commands.FIND + setSpacing());
+
+        if (keywordExists(keyword, tasks)) {
+            displayMatchingTasks(keyword, tasks);
+        } else {
+            messages.unknownTaskErrorMessage(keyword);
+        }
+    }
+
+    Boolean keywordExists(String keyword, ArrayList<Task> tasks) {
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase().contains(keyword)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void displayMatchingTasks(String keyword, ArrayList<Task> tasks) {
+        if (tasks.isEmpty()) {
+            messages.emptyListMessage();
+        } else {
+            int i = 0;
+            for (Task task : tasks) {
+                if (task.getDescription().toLowerCase().contains(keyword)) {
+                    System.out.println(messages.taskIndex(i) + tasks.get(i).toString());
+                    i++;
+                }
+            }
+        }
+    }
+
+    String extractKeyword(String input, String prefix) {
+        return input.substring(prefix.length()).trim();
+    }
+
     private TaskType determineTaskType(String input) {
         if (input.contains(Commands.TASK_BY)) {
             return TaskType.DEADLINE;
         }
+
         if (input.contains(Commands.TASK_FROM) && input.contains(Commands.TASK_TO)) {
             return TaskType.EVENT;
         }
+        
         return TaskType.TODO;
     }
 
@@ -88,6 +128,17 @@ public class TaskManager {
             }
             fileHandler.saveTasks(tasks);
         } catch (MissingTaskIndexException | InvalidTaskException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void handleFind(String input) {
+        try {
+            if (input.toLowerCase().equals(Commands.FIND)) {
+                throw new MissingKeywordException(messages.missingKeywordMessage());
+            }
+            findTask(input);
+        } catch (MissingKeywordException e) {
             System.out.println(e.getMessage());
         }
     }
