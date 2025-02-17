@@ -3,6 +3,7 @@ package commands;
 public final class Commands {
     public static final String INPUT_INDICATOR = "> ";
     public static final String LIST = "list";
+    public static final String FIND = "find";
     public static final String MARK = "mark";
     public static final String UNMARK = "unmark";
     public static final String DELETE = "delete";
@@ -16,6 +17,8 @@ public final class Commands {
         switch (command) {
             case LIST:
                 return "View task list";
+            case FIND:
+                return "Input this command followed by a keyword in your tasks";
             case MARK:
                 return "Input this command followed by the desired task ID to mark it as complete";
             case UNMARK:

@@ -33,6 +33,9 @@ public class Ace {
             } else if (input.contains(Commands.DELETE)) {
                 taskManager.handleDelete(input);
                 menu.setDivider();
+            } else if (input.contains(Commands.FIND)) {
+                taskManager.handleFind(input);
+                menu.setDivider();
             } else if (input.contains(Commands.MARK) || input.contains(Commands.UNMARK)){
                 taskManager.handleMarkUnmark(input);
                 menu.setDivider();

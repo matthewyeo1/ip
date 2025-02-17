@@ -34,8 +34,16 @@ public final class Messages {
         }
     }
 
+    public void unknownTaskErrorMessage(String keyword) {
+        System.out.println("ERROR: No task containing " + "\"" + keyword + "\"" + " exists.");
+    }
+
     public String missingTaskIndexMessage() {
         return "ERROR: Task index is missing.";
+    }
+
+    public String missingKeywordMessage() {
+        return "ERROR: Keyword is missing.";
     }
     
     public String nonexistentTaskIndex(int taskId) {

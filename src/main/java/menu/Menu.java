@@ -25,6 +25,8 @@ public final class Menu {
     public void displayCommandList() {
         String commandList = Commands.LIST + ": " + Commands.getCommandDescription(Commands.LIST) 
                             + System.lineSeparator()
+                            + Commands.FIND + ": " + Commands.getCommandDescription(Commands.FIND)
+                            + System.lineSeparator()
                             + Commands.MARK + ": " + Commands.getCommandDescription(Commands.MARK) 
                             + System.lineSeparator()
                             + Commands.UNMARK + ": " + Commands.getCommandDescription(Commands.UNMARK) 
