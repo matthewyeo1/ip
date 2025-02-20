@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import lib.Task;
 import messages.Messages;
 
+/**
+ * Handles saving and loading tasks from a file.
+ */
 public class TaskFileHandler {
     private static final String FILE_NAME = "./tasks.txt";
     private static final String TODO_ICON = "T";
@@ -67,6 +70,12 @@ public class TaskFileHandler {
         return taskList;
     }
     
+    /**
+     * Converts a task to a formatted string for file storage.
+     *
+     * @param task The task to convert.
+     * @return The formatted string representation of the task.
+     */
     private static String taskToFileFormat(Task task) {
         if (task instanceof Deadline) {
             return DEADLINE_ICON + DELIMITER + task.getDoneStatus() + 
@@ -83,6 +92,12 @@ public class TaskFileHandler {
         return EMPTY_STRING;
     }
 
+    /**
+     * Parses a line from the file into a Task object.
+     *
+     * @param line The line to parse.
+     * @return The corresponding Task object, or null if parsing fails.
+     */
     private static Task parseTask(String line) {
         String[] parts = line.split(ATTRIBUTE_SEPARATOR);
         if (parts.length < 3) return null;
@@ -111,7 +126,11 @@ public class TaskFileHandler {
         return task;
     }
     
-
+    /**
+     * Reflects the changes made to a task on the list
+     *
+     * @param tasks The list of tasks
+     */
     public void updateTaskFile(ArrayList<Task> tasks) {
         File file = new File(FILE_NAME);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {

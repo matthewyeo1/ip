@@ -1,5 +1,13 @@
 package commands;
 
+/**
+ * This class defines a collection of constants representing various commands 
+ * that can be used in the task management program. These commands allow the user 
+ * to interact with tasks by listing, finding, marking, unmarking, deleting tasks, 
+ * and exiting the program. It also provides a method to retrieve descriptions for 
+ * each command.
+ *
+ */
 public final class Commands {
     public static final String INPUT_INDICATOR = "> ";
     public static final String LIST = "list";

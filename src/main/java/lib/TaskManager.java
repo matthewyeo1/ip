@@ -8,12 +8,18 @@ import java.util.ArrayList;
 import messages.Messages;
 import data_storage.TaskFileHandler;
 
+/**
+ * Manages a list of tasks, allowing users to add, delete, find, and modify tasks.
+ */
 public class TaskManager {
     private static final int MAX_TASKS = 100;
     private ArrayList<Task> tasks;
     private TaskFileHandler fileHandler;
     Messages messages = new Messages();
 
+    /**
+     * Initializes TaskManager by loading tasks from storage.
+     */
     public TaskManager() {
         this.fileHandler = new TaskFileHandler();
         this.tasks = TaskFileHandler.loadTasks();
@@ -33,6 +39,12 @@ public class TaskManager {
         }
     }
 
+    /**
+     * Instantiates the corresponding subclass of the Task class according to certain
+     * identifiers in the user input string (task description).
+     * 
+     * @param input The task description which may contain the subclass identifiers.
+     */
     private Task createTask(String input) {
         TaskType taskType = determineTaskType(input);
         switch (taskType) {
@@ -50,6 +62,11 @@ public class TaskManager {
         }
     }
 
+    /**
+     * Finds and displays tasks containing the specified keyword.
+     * 
+     * @param input The user input containing the keyword.
+     */
     public void findTask(String input) {
         String keyword = extractKeyword(input, Commands.FIND + setSpacing());
 
@@ -99,6 +116,11 @@ public class TaskManager {
         return TaskType.TODO;
     }
 
+    /**
+     * Adds a new task to the task list based on the user input.
+     * 
+     * @param input The user input specifying the task details.
+     */
     public void addTask(String input) {
         if (input.isEmpty()) {
             messages.emptyInputMessage();
@@ -156,6 +178,14 @@ public class TaskManager {
         }
     }
 
+    /**
+     * Marks a task as completed. Marked tasks will be displayed 
+     * in the task list with and X beside them.
+     * 
+     * @param input The user input containing the task index to mark.
+     * @throws MissingTaskIndexException if the index is missing.
+     * @throws InvalidTaskException if the task ID is invalid.
+     */
     public void markTask(String input) throws MissingTaskIndexException, InvalidTaskException {
         int taskId = extractTaskId(input, Commands.MARK + setSpacing());
         validateTaskId(taskId);
@@ -174,6 +204,14 @@ public class TaskManager {
         }
     }
 
+    /**
+     * Unmarks a completed task. Tasks that were previously marked
+     * will have the X removed in the task list.
+     * 
+     * @param input The user input containing the task index to unmark.
+     * @throws MissingTaskIndexException if the index is missing.
+     * @throws InvalidTaskException if the task ID is invalid.
+     */
     public void unmarkTask(String input) throws MissingTaskIndexException, InvalidTaskException {
         int taskId = extractTaskId(input, Commands.UNMARK + setSpacing());
         validateTaskId(taskId);
@@ -206,12 +244,25 @@ public class TaskManager {
         }
     }
 
+    /**
+     * Validates if the given task ID is within the allowed range.
+     * 
+     * @param taskId The task ID to validate.
+     * @throws InvalidTaskException if the ID is out of range.
+     */
     private void validateTaskId(int taskId) throws InvalidTaskException {
         if (taskId < 1 || taskId > MAX_TASKS) {
             throw new InvalidTaskException(messages.taskIdOutOfBoundsMessage());
         }
     }
 
+    /**
+     * Deletes a task from the list.
+     * 
+     * @param input The user input containing the task index to delete.
+     * @throws MissingTaskIndexException if the index is missing.
+     * @throws InvalidTaskException if the task ID is invalid.
+     */
     public void deleteTask(String input) throws MissingTaskIndexException, InvalidTaskException {
         if (input.toLowerCase().equals(Commands.DELETE)) {
             throw new MissingTaskIndexException(messages.missingTaskIndexMessage());

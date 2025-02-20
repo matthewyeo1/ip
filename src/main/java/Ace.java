@@ -1,49 +1,40 @@
 import java.util.Scanner;
 import lib.TaskManager;
-import commands.Commands;
 import menu.Menu;
+import ui.UI;
 
+/**
+ * The <code>Ace</code> class serves as the entry point for the application.
+ * It initializes the necessary components such as <code>TaskManager</code>, 
+ * <code>Menu</code>, <code>Scanner</code>, and <code>UI</code> to handle user interactions.
+ *
+ * @author [Matthew Yeo Xian Wen]
+ * @version v0.1
+ */
 public class Ace {
+    
+    private TaskManager taskManager;
+    private Menu menu;
+    private Scanner scanner;
+    private UI ui;
 
-    public Ace () {};
+    public Ace() {}
+
     public static void main(String[] args) {
         new Ace().run();
     }
 
+    /**
+     * Initializes and starts the application by setting up 
+     * the necessary components and processing user input.
+     */
     public void run() {
-        Scanner scanner = new Scanner(System.in);
-        TaskManager taskManager = new TaskManager();
-        Menu menu = new Menu();
+        scanner = new Scanner(System.in);
+        taskManager = new TaskManager();
+        menu = new Menu();
+        ui = new UI(scanner, taskManager, menu);
         
         menu.displayWelcomeMessage();
-        
-        while (scanner.hasNextLine()) {
-            
-            String input = scanner.nextLine().trim();
-            System.out.print(Commands.INPUT_INDICATOR);
-
-            if (input.equalsIgnoreCase(Commands.BYE)) {
-                taskManager.handleExit();
-                menu.setDivider();
-                break;
-            } else if (input.equalsIgnoreCase(Commands.LIST)) {
-                System.out.println();
-                taskManager.showList();
-                menu.setDivider();
-            } else if (input.contains(Commands.DELETE)) {
-                taskManager.handleDelete(input);
-                menu.setDivider();
-            } else if (input.contains(Commands.FIND)) {
-                taskManager.handleFind(input);
-                menu.setDivider();
-            } else if (input.contains(Commands.MARK) || input.contains(Commands.UNMARK)){
-                taskManager.handleMarkUnmark(input);
-                menu.setDivider();
-            } else {
-                taskManager.addTask(input);
-                menu.setDivider();
-            }
-        }
-        scanner.close();
+        ui.processUserInput();
     }
 }

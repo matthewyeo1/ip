@@ -1,5 +1,9 @@
 package lib;
 
+/**
+ * The <code>Task</code> class represents a general task with a description and completion status.
+ * It serves as a base class for the ToDo, Deadline and Event subclasses.
+ */
 public abstract class Task {
     protected String description;
     protected boolean isDone;

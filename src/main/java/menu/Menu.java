@@ -1,6 +1,10 @@
 package menu;
 import commands.Commands;
 
+/**
+ * The <code>Menu</code> class is responsible for displaying the welcome message,
+ * command list, and dividers in the console UI.
+ */
 public final class Menu {
     public void setDivider() {
         System.out.println("\n" + "_".repeat(80) + "\n");

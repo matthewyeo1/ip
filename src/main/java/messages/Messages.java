@@ -1,5 +1,12 @@
 package messages;
 
+/**
+ * The <code>Messages</code> class provides predefined messages for user interactions.
+ * It contains methods to display system messages related to task management, such as 
+ * errors, confirmations, and status updates.
+ *
+ * <p>This class is designed to standardize message outputs and improve code readability.</p>
+ */
 public final class Messages {
 
     public void emptyListMessage() {
