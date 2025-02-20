@@ -15,6 +15,7 @@ How can I assist you?
 COMMANDS: 
 
 list: View task list
+find: Input this command followed by a keyword in your tasks
 mark: Input this command followed by the desired task ID to mark it as complete
 unmark: Input this command followed by the desired task ID to unmark it
 delete: Input this command followed by the desired task ID to delete it
