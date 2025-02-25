@@ -7,24 +7,35 @@ ACE is a command-line task manager designed to help you manage your tasks effici
 
 Below are the commands you can use to interact with ACE. You can copy and paste these commands directly into the terminal.
 
+
 ### List Tasks
-`list`  
+```
+list
+```  
 View your task list.
 
 ### Find Tasks
-`find [keyword]`  
+```
+find [keyword]
+```  
 Input this command followed by a keyword in your tasks to search for matching tasks.
 
 ### Mark Task as Complete
-`mark [task ID]`  
+```
+mark [task ID]
+```  
 Input this command followed by the desired task ID to mark it as complete.
 
 ### Unmark Task
-`unmark [task ID]`  
+```
+unmark [task ID]
+```  
 Input this command followed by the desired task ID to unmark it.
 
 ### Delete Task
-`delete [task ID]`  
+```
+delete [task ID]
+```  
 Input this command followed by the desired task ID to delete it.
 
 ### Exit the Program
@@ -38,6 +49,7 @@ Exit the ACE task manager program.
 
 - JDK 17 (Ensure you have Java Development Kit 17 installed to run the application)
 - ACE JAR file (Ensure you have the compiled JAR file to run the application)
+
 
 ## Setup Instructions
 
