@@ -8,7 +8,7 @@ import ui.UI;
  * It initializes the necessary components such as <code>TaskManager</code>, 
  * <code>Menu</code>, <code>Scanner</code>, and <code>UI</code> to handle user interactions.
  *
- * @author [Matthew Yeo Xian Wen]
+ * @author [Matthew Yeo Xian Wen (A0281183E)]
  * @version v0.1
  */
 public class Ace {
