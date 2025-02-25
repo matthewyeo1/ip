@@ -37,7 +37,7 @@ Below are the commands you can use to interact with ACE:
 ```
 list
 ```  
-View your task list. This is how your task list may look like with tasks:
+View your task list. This is how your task list may look like with some tasks:
 ```
 ________________________________________________________________________________
 
