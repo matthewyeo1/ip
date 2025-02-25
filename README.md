@@ -3,6 +3,20 @@
 ACE is a command-line task manager designed to help you manage your tasks efficiently. Whether it’s tracking tasks, deadlines, or events, ACE provides simple commands to keep you organized and productive.
 
 
+## How to Use ACE
+
+Simply enter a task description such as:
+```
+Buy groceries
+```
+
+Additionally, you can specify the deadline of the task, or its start and end times:
+```
+Finish CS2113 weekly quizzes /by 2359hrs
+```
+```
+Dinner with mom /from tomorrow 6pm /to 9pm
+``` 
 ## Commands
 
 Below are the commands you can use to interact with ACE. You can copy and paste these commands directly into the terminal.
