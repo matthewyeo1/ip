@@ -1,9 +1,19 @@
 # ACE Task Manager User Guide
 
-ACE is a command-line task manager designed to help you manage your tasks efficiently. Whether it’s tracking tasks, deadlines, or events, ACE provides simple commands to keep you organized and productive.
+ACE is a command-line task manager designed to help you manage your tasks efficiently. Whether it’s tracking tasks, deadlines, or events, ACE provides simple commands to keep you organized and productive
 
 
-## How to Use ACE
+## Features
+
+1. Add tasks as to-dos, deadlines, and events
+2. Mark tasks as done or unmark them
+3. Delete tasks that you no longer need to accomplish
+4. View all tasks or search for tasks using keywords
+5. Local tasks storage which saves your tasks to your local machine every time you close the application
+6. Exit the application smoothly by keying in 'bye'
+
+
+## Creating Tasks
 
 Simply enter a task description such as:
 ```
@@ -16,10 +26,11 @@ Finish CS2113 weekly quizzes /by 2359hrs
 ```
 ```
 Dinner with mom /from tomorrow 6pm /to 9pm
-``` 
+```
+
 ## Commands
 
-Below are the commands you can use to interact with ACE. You can copy and paste these commands directly into the terminal.
+Below are the commands you can use to interact with ACE:
 
 
 ### List Tasks
@@ -52,11 +63,11 @@ delete [task ID]
 ```  
 Input this command followed by the desired task ID to delete it.
 
-### Exit the Program
+### Exit the Application
 ```
 bye
 ```  
-Exit the ACE task manager program.
+Exit the ACE task manager application.
 
 
 ## Prerequisites
