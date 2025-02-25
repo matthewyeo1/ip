@@ -37,7 +37,18 @@ Below are the commands you can use to interact with ACE:
 ```
 list
 ```  
-View your task list.
+View your task list. This is how your task list may look like with tasks:
+```
+________________________________________________________________________________
+
+list
+>
+1. [T][ ] Buy groceries
+2. [D][ ] Finish CS2113 weekly quizzes (by: 2359hrs)
+3. [E][ ] Dinner with mom (from: tomorrow 6pm to: 8pm)
+
+________________________________________________________________________________
+```
 
 ### Find Tasks
 ```
