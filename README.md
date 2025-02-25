@@ -54,31 +54,31 @@ ________________________________________________________________________________
 ```
 find [keyword]
 ```  
-Input this command followed by a keyword in your tasks to search for matching tasks.
+Input this command followed by a keyword in your tasks to search for matching tasks
 
 ### Mark Task as Complete
 ```
 mark [task ID]
 ```  
-Input this command followed by the desired task ID to mark it as complete.
+Input this command followed by the desired task ID to mark it as complete
 
 ### Unmark Task
 ```
 unmark [task ID]
 ```  
-Input this command followed by the desired task ID to unmark it.
+Input this command followed by the desired task ID to unmark it
 
 ### Delete Task
 ```
 delete [task ID]
 ```  
-Input this command followed by the desired task ID to delete it.
+Input this command followed by the desired task ID to delete it
 
 ### Exit the Application
 ```
 bye
 ```  
-Exit the ACE task manager application.
+Exit the ACE task manager application
 
 
 ## Prerequisites
