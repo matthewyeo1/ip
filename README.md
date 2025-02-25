@@ -28,7 +28,8 @@ Input this command followed by the desired task ID to unmark it.
 Input this command followed by the desired task ID to delete it.
 
 ### Exit the Program
-`bye`  
+```
+bye  
 Exit the ACE task manager program.
 
 
@@ -42,10 +43,13 @@ Exit the ACE task manager program.
 1. Download the ACE JAR file to your local machine.
 2. Open a command prompt or terminal in the directory where the JAR file is located.
 3. Run the application using the following command:
-```java -jar Ace.jar```
+```
+java -jar Ace.jar
+
 4. If the setup is correct, you should see the following output:
 
-```________________________________________________________________________________
+```
+________________________________________________________________________________
 
 Hello! I am...
  _____   _____   _____
