@@ -1,3 +1,0 @@
-T | false | Buy groceries
-D | false | Finish CS2113 weekly quizzes | 2359hrs
-E | false | Dinner with mom | tomorrow 6pm | 8pm
