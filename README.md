@@ -89,8 +89,8 @@ Exit the ACE task manager application.
 
 ## Setup Instructions
 
-1. Download the ACE JAR file to your local machine.
-2. Open a command prompt or terminal in the directory where the JAR file is located.
+1. Download the ACE JAR file to your local machine
+2. Open a command prompt or terminal in the directory where the JAR file is located
 3. Run the application using the following command:
 ```
 java -jar Ace.jar
