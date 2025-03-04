@@ -1,0 +1,15 @@
+src/main/java/Ace.java
+src/main/java/commands/Commands.java
+src/main/java/data_storage/TaskFileHandler.java
+src/main/java/error_handling/InvalidTaskException.java
+src/main/java/error_handling/MissingKeywordException.java
+src/main/java/error_handling/MissingTaskIndexException.java
+src/main/java/lib/Deadline.java
+src/main/java/lib/Event.java
+src/main/java/lib/Task.java
+src/main/java/lib/TaskManager.java
+src/main/java/lib/TaskType.java
+src/main/java/lib/ToDo.java
+src/main/java/menu/Menu.java
+src/main/java/messages/Messages.java
+src/main/java/ui/UI.java
