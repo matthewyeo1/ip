@@ -15,12 +15,12 @@ ACE is a command-line task manager designed to help you manage your tasks effici
 
 ## Creating Tasks
 
-Simply enter a task description such as:
+Simply enter a task description for a To-Do such as:
 ```
 Buy groceries
 ```
 
-Additionally, you can specify the deadline of the task, or its start and end times:
+Additionally, you can specify the due date of the task for a Deadline, or its start and end times for an Event:
 ```
 Finish CS2113 weekly quizzes /by 2359hrs
 ```
